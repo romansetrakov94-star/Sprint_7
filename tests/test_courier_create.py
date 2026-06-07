@@ -1,7 +1,7 @@
 import allure
 import requests
 from config import Config
-from helpers import generate_random_string
+from helpers import generate_random_string, login_courier_and_return_id, delete_courier
 
 
 @allure.feature("Создание курьера")
@@ -25,6 +25,11 @@ class TestCourierCreate:
         with allure.step("Проверка успешного ответа"):
             assert response.status_code == 201
             assert response.json().get("ok") == True
+
+        # Удаляем курьера после теста
+        courier_id = login_courier_and_return_id(login, password)
+        if courier_id:
+            delete_courier(courier_id)
 
     @allure.title("Нельзя создать двух одинаковых курьеров")
     def test_create_duplicate_courier(self, courier_data):
@@ -70,6 +75,11 @@ class TestCourierCreate:
             assert response.status_code == 201
             assert response.json().get("ok") == True
 
+        # Удаляем курьера после теста
+        courier_id = login_courier_and_return_id(login, "pass")
+        if courier_id:
+            delete_courier(courier_id)
+
     @allure.title("Успешный запрос возвращает ok: true")
     def test_create_courier_returns_ok(self):
         login = generate_random_string(10)
@@ -81,4 +91,9 @@ class TestCourierCreate:
         with allure.step("Проверка тела ответа"):
             assert response.status_code == 201
             assert response.json().get("ok") == True
+
+        # Удаляем курьера после теста
+        courier_id = login_courier_and_return_id(login, "pass")
+        if courier_id:
+            delete_courier(courier_id)
             

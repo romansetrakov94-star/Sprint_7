@@ -1,6 +1,5 @@
 import allure
 import requests
-import pytest
 from config import Config
 
 
@@ -33,8 +32,6 @@ class TestCourierLogin:
             response = requests.post(f"{Config.COURIER_URL}/login", data={"login": "log"})
 
         with allure.step("Проверка кода ошибки"):
-            if response.status_code == 504:
-                pytest.skip("Сервер временно недоступен (504 Gateway Timeout)")
             assert response.status_code == 400
 
     @allure.title("Логин с неверным паролем — ошибка 404")
